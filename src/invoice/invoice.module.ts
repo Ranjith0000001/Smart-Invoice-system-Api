@@ -7,9 +7,7 @@ import { StripeModule } from '../stripe/stripe.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Invoice.name, schema: InvoiceSchema },
-    ]),
+    MongooseModule.forFeature([{ name: Invoice.name, schema: InvoiceSchema }]),
     StripeModule,
   ],
   controllers: [InvoiceController],

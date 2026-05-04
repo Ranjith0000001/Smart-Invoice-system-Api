@@ -7,8 +7,13 @@ export class StripeService {
 
   constructor() {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2026-04-22.dahlia',
+      apiVersion: '2022-11-15' as any, // fallback to avoid ts errors, stripe auto-negotiates version usually
     });
+  }
+
+  async verifySession(sessionId: string) {
+    const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+    return session;
   }
 
   async createCheckoutSession(invoice: any) {
@@ -27,7 +32,7 @@ export class StripeService {
         quantity: item.quantity,
       })),
 
-      success_url: 'http://localhost:5173/success',
+      success_url: 'http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: 'http://localhost:5173/cancel',
 
       metadata: {

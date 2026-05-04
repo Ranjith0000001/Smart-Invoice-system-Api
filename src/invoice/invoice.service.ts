@@ -23,10 +23,6 @@ export class InvoiceService {
   }
 
   async updateStatus(id: string, status: string) {
-    return this.invoiceModel.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true },
-    );
+    return this.invoiceModel.findByIdAndUpdate(id, { status }, { new: true });
   }
 }

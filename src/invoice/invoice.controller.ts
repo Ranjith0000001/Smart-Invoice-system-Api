@@ -12,7 +12,8 @@ import {
 import { InvoiceService } from './invoice.service';
 import { StripeService } from '../stripe/stripe.service';
 
-import type { Request, Response } from 'express'; // ✅ FIX
+import type { Request, Response } from 'express';
+import { CreateInvoiceDto } from './dto/create-invoice.dto';
 
 @Controller('invoices')
 export class InvoiceController {
@@ -22,8 +23,8 @@ export class InvoiceController {
   ) {}
 
   @Post()
-  create(@Body() body: any) {
-    return this.invoiceService.create(body);
+  create(@Body() createInvoiceDto: CreateInvoiceDto) {
+    return this.invoiceService.create(createInvoiceDto);
   }
 
   @Get()
@@ -35,6 +36,21 @@ export class InvoiceController {
   async payInvoice(@Param('id') id: string) {
     const invoice = await this.invoiceService.findById(id);
     return this.stripeService.createCheckoutSession(invoice);
+  }
+
+  @Get('verify-payment/:sessionId')
+  async verifyPayment(@Param('sessionId') sessionId: string) {
+    try {
+      const session = await this.stripeService.verifySession(sessionId);
+      if (session && session.payment_status === 'paid') {
+        const invoiceId = session.metadata.invoiceId;
+        await this.invoiceService.updateStatus(invoiceId, 'Paid');
+        return { success: true, invoiceId };
+      }
+      return { success: false, status: session.payment_status };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 
   // ✅ WEBHOOK ADDED (no breaking changes)
