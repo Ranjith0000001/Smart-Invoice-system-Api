@@ -1,12 +1,11 @@
 import { Controller, Post, Body, Req } from '@nestjs/common';
 import { StripeService } from './stripe.service';
-import type { Request } from 'express'; // ✅ FIX
+import type { Request } from 'express'; 
 
 @Controller('stripe')
 export class StripeController {
   constructor(private readonly stripeService: StripeService) {}
 
-  // ✅ FIX: replace createPaymentIntent
   @Post('create-payment')
   async createPayment(@Body() body: any) {
     return this.stripeService.createCheckoutSession({
@@ -21,7 +20,6 @@ export class StripeController {
     });
   }
 
-  // ✅ FIX: simple webhook (optional)
   @Post('webhook')
   handleWebhook(@Req() req: Request) {
     return { received: true };

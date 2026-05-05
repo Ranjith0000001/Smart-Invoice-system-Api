@@ -8,6 +8,9 @@ export class Invoice {
   @Prop()
   customerName: string;
 
+  @Prop()
+  customerEmail: string;
+
   @Prop([
     {
       name: String,
