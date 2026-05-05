@@ -5,36 +5,36 @@ export type InvoiceDocument = Invoice & Document;
 
 @Schema({ timestamps: true })
 export class Invoice {
-  @Prop()
-  customerName: string;
+  @Prop({ required: true })
+  customerName!: string;
 
-  @Prop()
-  customerEmail: string;
+  @Prop({ required: true })
+  customerEmail!: string;
 
   @Prop([
     {
-      name: String,
-      quantity: Number,
-      price: Number,
+      name: { type: String, required: true },
+      quantity: { type: Number, required: true },
+      price: { type: Number, required: true },
     },
   ])
-  items: {
+  items!: {
     name: string;
     quantity: number;
     price: number;
   }[];
 
-  @Prop()
-  subtotal: number;
+  @Prop({ required: true })
+  subtotal!: number;
 
-  @Prop()
-  tax: number;
+  @Prop({ required: true })
+  tax!: number;
 
-  @Prop()
-  total: number;
+  @Prop({ required: true })
+  total!: number;
 
   @Prop({ default: 'Draft' })
-  status: string;
+  status!: string;
 }
 
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice);

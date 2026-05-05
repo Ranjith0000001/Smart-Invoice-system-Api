@@ -48,12 +48,11 @@ export class InvoiceController {
         return { success: true, invoiceId };
       }
       return { success: false, status: session.payment_status };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
+    } catch (error: any) {
+  return { success: false, error: error.message };
+}
   }
 
-  // ✅ WEBHOOK ADDED (no breaking changes)
   @Post('webhook')
   async handleWebhook(
     @Req() req: Request,
@@ -72,8 +71,8 @@ export class InvoiceController {
       }
 
       return res.json({ received: true });
-    } catch (error) {
-      return res.status(400).send(error.message);
-    }
+    } catch (error: any) {
+  return res.status(400).send(error.message);
+}
   }
 }
